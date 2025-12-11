@@ -1,1 +1,9 @@
-# Music_Recommender
+# Music Recommender
+
+## Setup
+
+## Features
+
+## Design Patterns
+
+## Demo: 
