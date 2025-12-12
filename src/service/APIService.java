@@ -1,18 +1,5 @@
 package service;
 
-import model.SpotifyTrack;
-import model.SpotifyUser;
-import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.HttpException;
-import org.apache.hc.core5.http.HttpResponse;
-import org.apache.hc.core5.http.io.HttpClientResponseHandler;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -152,8 +139,20 @@ public class APIService {
 
     public JSONObject searchForSongs(String searchString) {
         searchString = searchString.replace(" ", "+");
-        String urlParameters = "q=" + searchString + "&type=track";
+        String urlParameters = "q=" + searchString + "&type=track&limit=5";
 
-        return callGetAPI("https://api.spotify.com/v1/search?" + urlParameters);
+        return callGetAPI(this.baseUrl + "search?" + urlParameters);
+    }
+
+    public JSONObject getArtist(String id) {
+        return callGetAPI(this.baseUrl + "artists/" + id);
+    }
+
+    public JSONObject getAlbum(String id) {
+        return callGetAPI(this.baseUrl + "albums/" + id);
+    }
+
+    public JSONObject getTrack(String id) {
+        return callGetAPI(this.baseUrl + "tracks/" + id);
     }
 }

@@ -1,4 +1,4 @@
-package model;
+package model.Spotify;
 
 public class SpotifyUser {
 }

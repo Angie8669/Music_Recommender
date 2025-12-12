@@ -1,5 +1,7 @@
 package model;
 
+import model.Spotify.SpotifyData;
+import model.Spotify.SpotifyTrack;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.APIService;
@@ -17,17 +19,23 @@ public class MusicRecommenderModel {
     public List<SpotifyTrack> searchForTracks(String searchQuery) {
         JSONObject response = api.searchForSongs(searchQuery);
 
-        List<SpotifyTrack> tracks = new ArrayList<>();
-
         JSONArray items = response.getJSONObject("tracks").getJSONArray("items");
+        List<SpotifyTrack> tracks = new ArrayList<>();
         for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
-            String trackId = item.getString("id");
-            String name = item.getString("name");
-            String artistName = item.getJSONArray("artists").getJSONObject(0).getString("name");
-            String albumName = item.getJSONObject("album").getString("name");
 
-            tracks.add(new SpotifyTrack(trackId, name, artistName, albumName));
+            // Get Artist objects first to make sure Artist is created.
+            JSONArray artists = item.getJSONArray("artists");
+            for (int j = 0; j < artists.length(); j++) {
+                SpotifyData.getArtist(artists.getJSONObject(j).getString("id"));
+            }
+
+            // Next, get the Album object. This will also create up to 20 tracks, likely including the current track.
+            SpotifyData.getAlbum(item.getJSONObject("album").getString("id"));
+
+            // With that, we should have the track created, so let's get it. If it doesn't exist, it'll be created.
+            SpotifyTrack track = SpotifyData.getTrack(item.getString("id"));
+            tracks.add(track);
         }
 
         return tracks;

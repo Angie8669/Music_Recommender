@@ -1,5 +1,6 @@
 import model.MusicRecommenderModel;
-import model.SpotifyTrack;
+import model.Spotify.SpotifyData;
+import model.Spotify.SpotifyTrack;
 
 import java.util.List;
 
@@ -12,5 +13,8 @@ public class Main {
         for (SpotifyTrack track : tracks) {
             System.out.println(track);
         }
+
+        System.out.println(SpotifyData.getArtistByName("Sydney Rose"));
+        System.out.println(SpotifyData.getAlbumByName("We Hug Now"));
     }
 }
