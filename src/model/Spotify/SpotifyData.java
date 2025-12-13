@@ -26,8 +26,6 @@ public class SpotifyData {
         if (artists.get(artistId) == null) {
             JSONObject data = api.getArtist(artistId);
 
-            System.out.println(data.toString(4));
-
             String name = data.getString("name");
             JSONArray images = data.getJSONArray("images");
             String image = "";
@@ -70,6 +68,13 @@ public class SpotifyData {
 
             SpotifyAlbum album = new SpotifyAlbum(albumId, name, image);
 
+            // Add artists
+            JSONArray artistsArray = data.getJSONArray("artists");
+            for (int i = 0; i < artistsArray.length(); i++) {
+                String artistId = artistsArray.getJSONObject(i).getString("id");
+                album.addArtist(getArtist(artistId));
+            }
+
             // Add genres
             JSONArray genresArray = data.getJSONArray("genres");
             for (int i = 0; i < genresArray.length(); i++) {
@@ -93,8 +98,6 @@ public class SpotifyData {
             for (int i = 0; i < tracksArray.length(); i++) {
                 album.addTrack(getTrack(tracksArray.getJSONObject(i).getString("id")));
             }
-
-
 
             return album;
         }

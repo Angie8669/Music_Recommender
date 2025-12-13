@@ -1,9 +1,9 @@
 package model;
 
-import model.Spotify.SpotifyData;
-import model.Spotify.SpotifyTrack;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import model.RecommendationStrategy.ArtistRecommendationStrategy;
+import model.RecommendationStrategy.GenreRecommendationStrategy;
+import model.RecommendationStrategy.RecommendationStrategy;
+import model.Spotify.*;
 import service.APIService;
 
 import java.util.ArrayList;
@@ -11,33 +11,92 @@ import java.util.List;
 
 public class MusicRecommenderModel {
     private APIService api = APIService.getInstance();
+    private List<SpotifyObject> seedObjects;
 
     public MusicRecommenderModel() {
+        this.seedObjects = new ArrayList<>();
+    }
 
+    public List<SpotifyArtist> searchForArtists(String searchQuery) {
+        return api.searchForArtists(searchQuery, 3);
+    }
+
+    public List<SpotifyAlbum> searchForAlbums(String searchQuery) {
+        return api.searchForAlbums(searchQuery, 3);
     }
 
     public List<SpotifyTrack> searchForTracks(String searchQuery) {
-        JSONObject response = api.searchForSongs(searchQuery);
+        return api.searchForSongs(searchQuery, 3);
+    }
 
-        JSONArray items = response.getJSONObject("tracks").getJSONArray("items");
-        List<SpotifyTrack> tracks = new ArrayList<>();
-        for (int i = 0; i < items.length(); i++) {
-            JSONObject item = items.getJSONObject(i);
-
-            // Get Artist objects first to make sure Artist is created.
-            JSONArray artists = item.getJSONArray("artists");
-            for (int j = 0; j < artists.length(); j++) {
-                SpotifyData.getArtist(artists.getJSONObject(j).getString("id"));
-            }
-
-            // Next, get the Album object. This will also create up to 20 tracks, likely including the current track.
-            SpotifyData.getAlbum(item.getJSONObject("album").getString("id"));
-
-            // With that, we should have the track created, so let's get it. If it doesn't exist, it'll be created.
-            SpotifyTrack track = SpotifyData.getTrack(item.getString("id"));
-            tracks.add(track);
+    public List<SpotifyTrack> getRecommendations() {
+        // Need at least one seed to get recommendations
+        if (this.seedObjects.isEmpty()) {
+            return null;
         }
 
-        return tracks;
+        // First, get all of the genres from tracks, artists, and albums in seeds
+        List<String> seeds = new ArrayList<>();
+
+        for (SpotifyObject obj : this.seedObjects) {
+            if (obj instanceof SpotifyArtist artist) {
+                seeds.addAll(artist.getGenres());
+            } else if (obj instanceof SpotifyAlbum album) {
+                seeds.addAll(album.getGenres());
+            } else if (obj instanceof SpotifyTrack track) {
+                // For tracks, get the genres from the artists/album
+                for (SpotifyArtist artist : track.getArtists()) {
+                    seeds.addAll(artist.getGenres());
+                }
+
+                seeds.addAll(track.getAlbum().getGenres());
+            }
+        }
+
+        RecommendationStrategy strategy;
+
+        // Pick strategy based on list of genres being empty or not.
+        if (seeds.isEmpty()) {
+            System.out.println("Picking Artist Strategy");
+            // Replace genres with artist IDs
+            seeds.clear();
+            for (SpotifyObject obj : this.seedObjects) {
+                if (obj instanceof SpotifyArtist artist) {
+                    seeds.addAll(artist.getGenres());
+                } else if (obj instanceof SpotifyAlbum album) {
+                    for (SpotifyArtist artist : album.getArtists()) {
+                        seeds.add(artist.getName());
+                    }
+                } else if (obj instanceof SpotifyTrack track) {
+                    for (SpotifyArtist artist : track.getArtists()) {
+                        seeds.add(artist.getName());
+                    }
+                }
+            }
+            strategy = new ArtistRecommendationStrategy();
+        } else {
+            System.out.println("Picking Genre Strategy");
+            strategy = new GenreRecommendationStrategy();
+        }
+
+        // Make sure recommendations don't contain seeds
+        List<SpotifyTrack> recs = strategy.getRecommendations(seeds);
+
+        for (SpotifyObject obj : this.seedObjects) {
+            if (obj instanceof SpotifyTrack track) {
+                recs.remove(track);
+            }
+        }
+
+        return recs;
+    }
+
+    public void addSeed(SpotifyObject obj) {
+        this.seedObjects.add(obj);
+        System.out.println(seedObjects);
+    }
+
+    public void clearSeeds() {
+        this.seedObjects.clear();
     }
 }

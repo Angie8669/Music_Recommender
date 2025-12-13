@@ -3,25 +3,19 @@ package model.Spotify;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpotifyAlbum {
-    private final String albumId;
-    private final String name;
+public class SpotifyAlbum extends SpotifyObject {
     private final String image;
     private final List<SpotifyArtist> artists;
     private final List<SpotifyTrack> tracks;
     private final List<String> genres;
 
     public SpotifyAlbum(String id, String n, String img) {
-        this.albumId = id;
+        this.id = id;
         this.name = n;
         this.image = img;
         this.artists = new ArrayList<>();
         this.tracks = new ArrayList<>();
         this.genres = new ArrayList<>();
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getImage() {
@@ -34,6 +28,10 @@ public class SpotifyAlbum {
 
     public List<SpotifyTrack> getTracks() {
         return tracks;
+    }
+
+    public List<String> getGenres() {
+        return genres;
     }
 
     public void addArtist(SpotifyArtist artist) {

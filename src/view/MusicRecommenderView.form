@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="view.MusicRecommenderView">
+  <grid id="27dc6" binding="panelMain" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+    <constraints>
+      <xy x="20" y="20" width="1280" height="1720"/>
+    </constraints>
+    <properties>
+      <inheritsPopupMenu value="false"/>
+      <maximumSize width="1280" height="720"/>
+      <minimumSize width="1280" height="720"/>
+      <preferredSize width="1280" height="720"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="7dc0a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints/>
+        <properties>
+          <preferredSize width="275" height="720"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="81a08" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <font name="Arial" size="24" style="1"/>
+              <text value="Music Recommender"/>
+            </properties>
+          </component>
+          <component id="94ac0" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <font name="Arial" size="16" style="0"/>
+              <preferredSize width="270" height="100"/>
+              <text value="&lt;html&gt;&#10;Search for Songs, Artists, and Albums to get song recommendations. You can select up to 5 songs, artists, or albums to seed your recommendations.&#10;&lt;/html&gt;"/>
+              <verifyInputWhenFocusTarget value="true"/>
+            </properties>
+          </component>
+          <component id="8488e" class="javax.swing.JTextField" binding="testTextField" default-binding="true">
+            <constraints/>
+            <properties>
+              <preferredSize width="270" height="34"/>
+              <text value=""/>
+              <toolTipText value=""/>
+              <visible value="true"/>
+            </properties>
+          </component>
+          <grid id="9799c" layout-manager="FlowLayout" hgap="0" vgap="0" flow-align="1">
+            <constraints/>
+            <properties>
+              <maximumSize width="275" height="75"/>
+              <minimumSize width="275" height="44"/>
+              <preferredSize width="275" height="75"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="2ebf" class="javax.swing.JButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Search Artists"/>
+                </properties>
+              </component>
+              <component id="1b77f" class="javax.swing.JButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Search Albums"/>
+                </properties>
+              </component>
+              <component id="dc2b3" class="javax.swing.JButton" binding="searchSongsButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Search Songs"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="526ca" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints/>
+            <properties>
+              <preferredSize width="275" height="85"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="7b507" class="javax.swing.JButton" binding="getRecommendationsButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Get Recommendations"/>
+                </properties>
+              </component>
+              <component id="1856" class="javax.swing.JButton" binding="clearSeedsButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Clear Seeds"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <hspacer id="24756">
+        <constraints/>
+      </hspacer>
+      <grid id="a1637" layout-manager="FlowLayout" hgap="0" vgap="0" flow-align="1">
+        <constraints/>
+        <properties>
+          <preferredSize width="955" height="720"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <grid id="24046" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+            <constraints/>
+            <properties>
+              <preferredSize width="955" height="240"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="75a66" class="javax.swing.JLabel" binding="song0Image">
+                <constraints/>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <preferredSize width="200" height="200"/>
+                  <text value=""/>
+                  <verticalAlignment value="0"/>
+                </properties>
+              </component>
+              <grid id="6a7d1" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                <constraints/>
+                <properties>
+                  <preferredSize width="600" height="200"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="dea4f" class="javax.swing.JTextPane" binding="song0Text0">
+                    <constraints/>
+                    <properties>
+                      <font name="Arial" size="16" style="1"/>
+                      <minimumSize width="700" height="25"/>
+                      <preferredSize width="700" height="25"/>
+                    </properties>
+                  </component>
+                  <component id="e7a87" class="javax.swing.JTextPane" binding="song0Text1">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="700" height="23"/>
+                    </properties>
+                  </component>
+                  <component id="6ed37" class="javax.swing.JTextPane" binding="song0Text2">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="700" height="23"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="75c63" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="39bc1" class="javax.swing.JButton" binding="addSeedButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Add Seed"/>
+                      <visible value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="928a0" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+            <constraints/>
+            <properties>
+              <preferredSize width="955" height="240"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="77f22" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <preferredSize width="200" height="200"/>
+                  <text value=""/>
+                  <verticalAlignment value="0"/>
+                </properties>
+              </component>
+              <grid id="3713e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                <constraints/>
+                <properties>
+                  <preferredSize width="600" height="200"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="82698" class="javax.swing.JTextPane">
+                    <constraints/>
+                    <properties>
+                      <font name="Arial" size="16" style="1"/>
+                      <minimumSize width="700" height="25"/>
+                      <preferredSize width="700" height="25"/>
+                    </properties>
+                  </component>
+                  <component id="8fcd5" class="javax.swing.JTextPane">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="700" height="23"/>
+                    </properties>
+                  </component>
+                  <component id="9e8f0" class="javax.swing.JTextPane">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="700" height="23"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="ee5ab" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="3388e" class="javax.swing.JButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Add Seed"/>
+                      <visible value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="3c8e3" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+            <constraints/>
+            <properties>
+              <preferredSize width="955" height="240"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="7002b" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <preferredSize width="200" height="200"/>
+                  <text value=""/>
+                  <verticalAlignment value="0"/>
+                </properties>
+              </component>
+              <grid id="1d891" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                <constraints/>
+                <properties>
+                  <preferredSize width="600" height="200"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="585ef" class="javax.swing.JTextPane">
+                    <constraints/>
+                    <properties>
+                      <font name="Arial" size="16" style="1"/>
+                      <minimumSize width="700" height="25"/>
+                      <preferredSize width="700" height="25"/>
+                    </properties>
+                  </component>
+                  <component id="b596a" class="javax.swing.JTextPane">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="700" height="23"/>
+                    </properties>
+                  </component>
+                  <component id="8f4e1" class="javax.swing.JTextPane">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="700" height="23"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="b1d2a" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="d2bb9" class="javax.swing.JButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Add Seed"/>
+                      <visible value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

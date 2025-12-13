@@ -1,11 +1,19 @@
 package service;
 
+import Utils.APIUtils;
+import model.Spotify.SpotifyAlbum;
+import model.Spotify.SpotifyArtist;
+import model.Spotify.SpotifyData;
+import model.Spotify.SpotifyTrack;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class APIService {
@@ -67,7 +75,7 @@ public class APIService {
             return new JSONObject(response.toString());
         } catch (Exception e) {
             // Return false to indicate authentication failed
-            e.printStackTrace();
+            e.printStackTrace(System.out);
             return null;
         } finally {
             if (connection != null) {
@@ -106,7 +114,7 @@ public class APIService {
             return new JSONObject(response.toString());
         } catch (Exception e) {
             // Return false to indicate authentication failed
-            e.printStackTrace();
+            e.printStackTrace(System.out);
             return null;
         } finally {
             if (connection != null) {
@@ -137,11 +145,89 @@ public class APIService {
         return true;
     }
 
-    public JSONObject searchForSongs(String searchString) {
-        searchString = searchString.replace(" ", "+");
-        String urlParameters = "q=" + searchString + "&type=track&limit=5";
+    public List<SpotifyArtist> searchForArtists(String searchString, int limit) {
+        String urlParameters = APIUtils.encodeParams("q=" + searchString + "&type=artist&limit=" + limit);
 
-        return callGetAPI(this.baseUrl + "search?" + urlParameters);
+        JSONObject response = callGetAPI(this.baseUrl + "search?" + urlParameters);
+
+        if (response != null) {
+            JSONArray items = response.getJSONObject("artists").getJSONArray("items");
+            List<SpotifyArtist> artists = new ArrayList<>();
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject item = items.getJSONObject(i);
+
+                // Get the Artist object
+                SpotifyArtist artist = SpotifyData.getArtist(item.getString("id"));
+                artists.add(artist);
+            }
+
+            return artists;
+        }
+
+        // No results found or error occurred, return empty list.
+        return new ArrayList<>();
+    }
+
+    public List<SpotifyAlbum> searchForAlbums(String searchString, int limit) {
+        String urlParameters = APIUtils.encodeParams("q=" + searchString + "&type=album&limit=" + limit);
+
+        JSONObject response = callGetAPI(this.baseUrl + "search?" + urlParameters);
+
+        if (response == null) {
+            JSONArray items = response.getJSONObject("albums").getJSONArray("items");
+            List<SpotifyAlbum> albums = new ArrayList<>();
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject item = items.getJSONObject(i);
+
+                // Get Artist objects first to make sure Artist is created.
+                JSONArray artists = item.getJSONArray("artists");
+                for (int j = 0; j < artists.length(); j++) {
+                    SpotifyData.getArtist(artists.getJSONObject(j).getString("id"));
+                }
+
+                // Next, get the Album object. This will also create up to 20 tracks.
+                SpotifyAlbum album = SpotifyData.getAlbum(item.getString("id"));
+
+                albums.add(album);
+            }
+
+            return albums;
+        }
+
+        // No results found or error occurred, return empty list.
+        return new ArrayList<>();
+    }
+
+    public List<SpotifyTrack> searchForSongs(String searchString, int limit) {
+        String urlParameters = APIUtils.encodeParams("q=" + searchString + "&type=track&limit=" + limit);
+
+        JSONObject response = callGetAPI(this.baseUrl + "search?" + urlParameters);
+
+        if (response != null) {
+            JSONArray items = response.getJSONObject("tracks").getJSONArray("items");
+            List<SpotifyTrack> tracks = new ArrayList<>();
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject item = items.getJSONObject(i);
+
+                // Get Artist objects first to make sure Artist is created.
+                JSONArray artists = item.getJSONArray("artists");
+                for (int j = 0; j < artists.length(); j++) {
+                    SpotifyData.getArtist(artists.getJSONObject(j).getString("id"));
+                }
+
+                // Next, get the Album object. This will also create up to 20 tracks, likely including the current track.
+                SpotifyData.getAlbum(item.getJSONObject("album").getString("id"));
+
+                // With that, we should have the track created, so let's get it. If it doesn't exist, it'll be created.
+                SpotifyTrack track = SpotifyData.getTrack(item.getString("id"));
+                tracks.add(track);
+            }
+
+            return tracks;
+        }
+
+        // No results found or error occurred, return empty list.
+        return new ArrayList<>();
     }
 
     public JSONObject getArtist(String id) {
