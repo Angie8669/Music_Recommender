@@ -173,7 +173,7 @@ public class APIService {
 
         JSONObject response = callGetAPI(this.baseUrl + "search?" + urlParameters);
 
-        if (response == null) {
+        if (response != null) {
             JSONArray items = response.getJSONObject("albums").getJSONArray("items");
             List<SpotifyAlbum> albums = new ArrayList<>();
             for (int i = 0; i < items.length(); i++) {

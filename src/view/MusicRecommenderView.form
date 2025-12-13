@@ -94,6 +94,10 @@
               </component>
             </children>
           </grid>
+          <component id="8a361" class="javax.swing.JTextPane" binding="statusMessage">
+            <constraints/>
+            <properties/>
+          </component>
         </children>
       </grid>
       <hspacer id="24756">

@@ -16,6 +16,7 @@ public class MusicRecommenderView extends JFrame {
     private JTextPane song0Text2;
     private JButton addSeedButton;
     private JButton clearSeedsButton;
+    private JTextPane statusMessage;
 
     public MusicRecommenderView() {
         controller = new MusicRecommenderController(panelMain);
