@@ -8,8 +8,7 @@ public class SpotifyTrack extends SpotifyObject {
     private final SpotifyAlbum album;
 
     public SpotifyTrack(String id, String n, SpotifyAlbum alb) {
-        this.id = id;
-        this.name = n;
+        super(id, n);
         this.artists = new ArrayList<>();
         this.album = alb;
     }
@@ -29,8 +28,8 @@ public class SpotifyTrack extends SpotifyObject {
     public String toString() {
         StringBuilder artistsString = new StringBuilder();
         for(SpotifyArtist artist : this.artists) {
-            artistsString.append(artist.toString()).append(", ");
+            artistsString.append(artist.getName()).append(", ");
         }
-        return "Track: " + this.name + ", Artist: " + artistsString + "Album: " + this.album;
+        return "Track: " + this.name + ", Artists: " + artistsString + "Album: " + this.album.getName();
     }
 }

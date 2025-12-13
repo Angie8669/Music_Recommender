@@ -10,8 +10,7 @@ public class SpotifyAlbum extends SpotifyObject {
     private final List<String> genres;
 
     public SpotifyAlbum(String id, String n, String img) {
-        this.id = id;
-        this.name = n;
+        super(id, n);
         this.image = img;
         this.artists = new ArrayList<>();
         this.tracks = new ArrayList<>();

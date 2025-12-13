@@ -157,7 +157,8 @@ public class APIService {
                 JSONObject item = items.getJSONObject(i);
 
                 // Get the Artist object
-                SpotifyArtist artist = SpotifyData.getArtist(item.getString("id"));
+                SpotifyData spotifyData = SpotifyData.getInstance();
+                SpotifyArtist artist = spotifyData.getArtist(item.getString("id"));
                 artists.add(artist);
             }
 
@@ -180,13 +181,14 @@ public class APIService {
                 JSONObject item = items.getJSONObject(i);
 
                 // Get Artist objects first to make sure Artist is created.
+                SpotifyData spotifyData = SpotifyData.getInstance();
                 JSONArray artists = item.getJSONArray("artists");
                 for (int j = 0; j < artists.length(); j++) {
-                    SpotifyData.getArtist(artists.getJSONObject(j).getString("id"));
+                    spotifyData.getArtist(artists.getJSONObject(j).getString("id"));
                 }
 
                 // Next, get the Album object. This will also create up to 20 tracks.
-                SpotifyAlbum album = SpotifyData.getAlbum(item.getString("id"));
+                SpotifyAlbum album = spotifyData.getAlbum(item.getString("id"));
 
                 albums.add(album);
             }
@@ -210,16 +212,17 @@ public class APIService {
                 JSONObject item = items.getJSONObject(i);
 
                 // Get Artist objects first to make sure Artist is created.
+                SpotifyData spotifyData = SpotifyData.getInstance();
                 JSONArray artists = item.getJSONArray("artists");
                 for (int j = 0; j < artists.length(); j++) {
-                    SpotifyData.getArtist(artists.getJSONObject(j).getString("id"));
+                    spotifyData.getArtist(artists.getJSONObject(j).getString("id"));
                 }
 
                 // Next, get the Album object. This will also create up to 20 tracks, likely including the current track.
-                SpotifyData.getAlbum(item.getJSONObject("album").getString("id"));
+                spotifyData.getAlbum(item.getJSONObject("album").getString("id"));
 
                 // With that, we should have the track created, so let's get it. If it doesn't exist, it'll be created.
-                SpotifyTrack track = SpotifyData.getTrack(item.getString("id"));
+                SpotifyTrack track = spotifyData.getTrack(item.getString("id"));
                 tracks.add(track);
             }
 

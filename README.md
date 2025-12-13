@@ -3,8 +3,9 @@
 ## Setup
 1. Get API key following steps on [Spotify Web API documentation website](https://developer.spotify.com/documentation/web-api).
 2. Create config.properties file under `resources/` folder.
-3. Add `client_id` and `client_secret` to config.properties.
+3. Add `client_id` and `client_secret` to config.properties. You can reference `config.properties.example`.
 4. (In IntelliJ) Ensure `src/` folder is set as Sources Root, and `resources/` is set as Resources Root.
+5. (In IntelliJ) You may need to sync all Maven projects to ensure dependencies are properly installed.
 5. Run Main.java
 
 ## Features

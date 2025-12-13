@@ -57,7 +57,6 @@ public class MusicRecommenderModel {
 
         // Pick strategy based on list of genres being empty or not.
         if (seeds.isEmpty()) {
-            System.out.println("Picking Artist Strategy");
             // Replace genres with artist IDs
             seeds.clear();
             for (SpotifyObject obj : this.seedObjects) {
@@ -75,7 +74,6 @@ public class MusicRecommenderModel {
             }
             strategy = new ArtistRecommendationStrategy();
         } else {
-            System.out.println("Picking Genre Strategy");
             strategy = new GenreRecommendationStrategy();
         }
 
@@ -91,9 +89,12 @@ public class MusicRecommenderModel {
         return recs;
     }
 
+    public List<SpotifyObject> getSeedObjects() {
+        return seedObjects;
+    }
+
     public void addSeed(SpotifyObject obj) {
         this.seedObjects.add(obj);
-        System.out.println(seedObjects);
     }
 
     public void clearSeeds() {

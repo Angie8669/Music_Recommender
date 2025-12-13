@@ -10,20 +10,32 @@ import java.util.List;
 import java.util.Map;
 
 public class SpotifyData {
-    private static Map<String, SpotifyArtist> artists = new HashMap<>();
-    private static Map<String, SpotifyAlbum> albums = new HashMap<>();
-    private static Map<String, SpotifyTrack> tracks = new HashMap<>();
+    private static SpotifyData spotifyData;
+    private Map<String, SpotifyArtist> artists = new HashMap<>();
+    private Map<String, SpotifyAlbum> albums = new HashMap<>();
+    private Map<String, SpotifyTrack> tracks = new HashMap<>();
 
-    private static Map<String, List<SpotifyArtist>> artistsByName = new HashMap<>();
-    private static Map<String, List<SpotifyAlbum>> albumsByName = new HashMap<>();
-    private static Map<String, List<SpotifyTrack>> tracksByName = new HashMap<>();
+    private Map<String, List<SpotifyArtist>> artistsByName = new HashMap<>();
+    private Map<String, List<SpotifyAlbum>> albumsByName = new HashMap<>();
+    private Map<String, List<SpotifyTrack>> tracksByName = new HashMap<>();
 
-    private static APIService api = APIService.getInstance();
+    private SpotifyData() {
+
+    }
+
+    public static SpotifyData getInstance() {
+        if (spotifyData == null) {
+            spotifyData = new SpotifyData();
+        }
+
+        return spotifyData;
+    }
 
     // Get an artist by ID. If necessary, calls APIService to get the data.
-    public static SpotifyArtist getArtist(String artistId) {
+    public SpotifyArtist getArtist(String artistId) {
         // Only create a new artist if the current artistId has not yet been created.
         if (artists.get(artistId) == null) {
+            APIService api = APIService.getInstance();
             JSONObject data = api.getArtist(artistId);
 
             String name = data.getString("name");
@@ -59,10 +71,12 @@ public class SpotifyData {
     }
 
     // Get an album by id. If necessary, calls APIService to get the data.
-    public static SpotifyAlbum getAlbum(String albumId) {
+    public SpotifyAlbum getAlbum(String albumId) {
         // Only create a new album if the current albumId has not yet been created.
         if (albums.get(albumId) == null) {
+            APIService api = APIService.getInstance();
             JSONObject data = api.getAlbum(albumId);
+
             String name = data.getString("name");
             String image = data.getJSONArray("images").getJSONObject(0).getString("url");
 
@@ -105,10 +119,12 @@ public class SpotifyData {
         return albums.get(albumId);
     }
 
-    public static SpotifyTrack getTrack(String trackId) {
+    public SpotifyTrack getTrack(String trackId) {
         // Only create a new track if the current trackId has not yet been created.
         if (tracks.get(trackId) == null) {
+            APIService api = APIService.getInstance();
             JSONObject data = api.getTrack(trackId);
+
             String name = data.getString("name");
 
             String albumId = data.getJSONObject("album").getString("id");
@@ -139,15 +155,15 @@ public class SpotifyData {
         return tracks.get(trackId);
     }
 
-    public static List<SpotifyArtist> getArtistByName(String name) {
+    public List<SpotifyArtist> getArtistByName(String name) {
         return artistsByName.get(name);
     }
 
-    public static List<SpotifyAlbum> getAlbumByName(String name) {
+    public List<SpotifyAlbum> getAlbumByName(String name) {
         return albumsByName.get(name);
     }
 
-    public static List<SpotifyTrack> getTrackByName(String name) {
+    public List<SpotifyTrack> getTrackByName(String name) {
         return tracksByName.get(name);
     }
 }
