@@ -1,276 +1,101 @@
 package controller;
 
+import controller.Listener.SectionListener;
 import model.MusicRecommenderModel;
 import model.Spotify.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.net.URI;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MusicRecommenderController {
     private MusicRecommenderModel model;
+    private SectionManager sectionManager;
+
     private JPanel panelMain;
     private JTextField searchField;
-    private JPanel songDisplay;
     private JTextPane statusMessage;
+    private JPanel loading;
 
     // Use a SwingWorker to handle API calls in the background
-    private boolean swingWorkerHelper;
-    private SwingWorker<List<SpotifyArtist>, Void> artistWorker;
-    private SwingWorker<List<SpotifyAlbum>, Void> albumWorker;
-    private SwingWorker<List<SpotifyTrack>, Void> trackWorker;
+    private boolean swingWorkerHelper = false;
+    private SwingWorker<List<SpotifyObject>, Void> swingWorker;
 
     public MusicRecommenderController(JPanel panel) {
         this.model = new MusicRecommenderModel();
         this.panelMain = panel;
 
-        JPanel menu = (JPanel) this.panelMain.getComponent(0);
+        JPanel menuContainer = (JPanel) this.panelMain.getComponent(0);
+        JPanel menu = (JPanel) menuContainer.getComponent(0);
         this.searchField = (JTextField) menu.getComponent(2);
 
         // Setup button listeners
-        JPanel searchButtons = (JPanel) menu.getComponent(3);
-        JButton searchArtistsButton = (JButton) searchButtons.getComponent(0);
+        JButton searchArtistsButton = (JButton) menu.getComponent(3);
         searchArtistsButton.addActionListener(e -> getArtists());
 
-        JButton searchAlbumsButton = (JButton) searchButtons.getComponent(1);
+        JButton searchAlbumsButton = (JButton) menu.getComponent(4);
         searchAlbumsButton.addActionListener(e -> getAlbums());
 
-        JButton searchSongsButton = (JButton) searchButtons.getComponent(2);
+        JButton searchSongsButton = (JButton) menu.getComponent(5);
         searchSongsButton.addActionListener(e -> getTracks());
 
-        JPanel recommendationButtons = (JPanel) menu.getComponent(4);
-        JButton recommendationsButton = (JButton) recommendationButtons.getComponent(0);
-        recommendationsButton.addActionListener(e -> getRecommendations());
-
-        JButton clearSeedsButton = (JButton) recommendationButtons.getComponent(1);
+        JButton clearSeedsButton = (JButton) menu.getComponent(6);
         clearSeedsButton.addActionListener(e -> clearSeeds());
 
-        this.statusMessage = (JTextPane) menu.getComponent(5);
+        JButton recommendationsButton = (JButton) menu.getComponent(7);
+        recommendationsButton.addActionListener(e -> getRecommendations());
 
-        this.songDisplay = (JPanel) this.panelMain.getComponent(2);
-    }
+        JPanel statusContainer = (JPanel) menu.getComponent(8);
+        this.statusMessage = (JTextPane) statusContainer.getComponent(0);
 
-    private void setEmptySection(int index) {
-        JPanel song = (JPanel) this.songDisplay.getComponent(index);
+        this.loading = (JPanel) menu.getComponent(9);
+        JButton cancelRequestButton = (JButton) this.loading.getComponent(1);
+        cancelRequestButton.addActionListener(e -> cancelRequest());
 
-        JLabel songImage = (JLabel) song.getComponent(0);
-        songImage.setIcon(null);
+         JPanel songDisplay = (JPanel) this.panelMain.getComponent(2);
 
-        JPanel songText = (JPanel) song.getComponent(1);
-        JTextPane songText0 = (JTextPane) songText.getComponent(0);
-        songText0.setText("");
+        // Setup observers
+        this.sectionManager = new SectionManager();
 
-        JTextPane songText1 = (JTextPane) songText.getComponent(1);
-        songText1.setText("");
-
-        JTextPane songText2 = (JTextPane) songText.getComponent(2);
-        songText2.setText("");
-
-        // Set Add Seed button to invisible
-        JPanel songButtonPanel = (JPanel) song.getComponent(2);
-        JButton addSeedButton = (JButton) songButtonPanel.getComponent(0);
-
-        addSeedButton.setVisible(false);
-
-        // Remove previous action listeners
-        for (ActionListener listener : addSeedButton.getListeners(ActionListener.class)) {
-            addSeedButton.removeActionListener(listener);
+        for (int i = 0; i < 3; i++) {
+            JPanel section = (JPanel) songDisplay.getComponent(i);
+            SectionListener listener = new SectionListener(this, section);
+            this.sectionManager.addListener(listener);
         }
     }
 
-    private void setArtistOnView(List<SpotifyArtist> artists) {
-        if (artists.isEmpty()) {
-            this.statusMessage.setText("No artist data found for your query.");
+    private void notifyListeners(List<SpotifyObject> objects, String type, boolean displayAddSeedButtons) {
+        // Remove loading spinner and Cancel button
+        this.loading.setVisible(false);
+
+        // If empty list, output different status message.
+        if (objects.isEmpty()) {
+            this.statusMessage.setText("Retrieved no data for provided search query.");
+            this.sectionManager.notify(objects, displayAddSeedButtons);
             return;
         }
-        // Display up to 3 songs
-        for(int i = 0; i < 3; i++) {
-            if (i < artists.size()) {
-                SpotifyArtist artist = artists.get(i);
-                JPanel song = (JPanel) this.songDisplay.getComponent(i);
-                // Set image
-                try {
-                    JLabel songImage = (JLabel) song.getComponent(0);
 
-                    URL url = URI.create(artist.getImage()).toURL();
-                    BufferedImage image = ImageIO.read(url);
-                    Image resized = image.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
-
-                    songImage.setIcon(new ImageIcon(resized));
-                } catch (Exception e) {
-
-                }
-
-                JPanel songText = (JPanel) song.getComponent(1);
-                JTextPane songText0 = (JTextPane) songText.getComponent(0);
-                songText0.setText(artist.getName());
-
-                JTextPane songText1 = (JTextPane) songText.getComponent(1);
-                StringBuilder genres = new StringBuilder();
-                for (String genre : artist.getGenres()) {
-                    genres.append(genre).append(", ");
-                }
-                songText1.setText("Genres: " + genres);
-
-                // No text to display, so clear anything already there.
-                JTextPane songText2 = (JTextPane) songText.getComponent(2);
-                songText2.setText("");
-
-                // Set Add Seed button to visible
-                JPanel songButtonPanel = (JPanel) song.getComponent(2);
-                JButton addSeedButton = (JButton) songButtonPanel.getComponent(0);
-
-                addSeedButton.setVisible(true);
-
-                // Remove previous action listeners
-                for (ActionListener listener : addSeedButton.getListeners(ActionListener.class)) {
-                    addSeedButton.removeActionListener(listener);
-                }
-
-                // Add new listener
-                addSeedButton.addActionListener(e -> addSeed(artist));
-            } else {
-                setEmptySection(i);
-            }
-
-            this.statusMessage.setText("Successfully pulled artist data.");
+        // Update status message
+        if (type.equals("artists")) {
+            this.statusMessage.setText("Successfully retrieved artist data.");
+        } else if (type.equals("albums")) {
+            this.statusMessage.setText("Successfully retrieved album data.");
+        } else if (type.equals("tracks")) {
+            this.statusMessage.setText("Successfully retrieved track data.");
+        } else if (type.equals("recs")) {
+            this.statusMessage.setText("Successfully retrieved recommendation data.");
         }
-    }
 
-    private void setAlbumsOnView(List<SpotifyAlbum> albums) {
-        if (albums.isEmpty()) {
-            this.statusMessage.setText("No album data found for your query.");
-            return;
-        }
-        // Display up to 3 songs
-        for(int i = 0; i < 3; i++) {
-            if (i < albums.size()) {
-                SpotifyAlbum album = albums.get(i);
-                JPanel song = (JPanel) this.songDisplay.getComponent(i);
-                // Set image
-                try {
-                    JLabel songImage = (JLabel) song.getComponent(0);
-
-                    URL url = URI.create(album.getImage()).toURL();
-                    BufferedImage image = ImageIO.read(url);
-                    Image resized = image.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
-
-                    songImage.setIcon(new ImageIcon(resized));
-                } catch (Exception e) {
-
-                }
-
-                JPanel songText = (JPanel) song.getComponent(1);
-                JTextPane songText0 = (JTextPane) songText.getComponent(0);
-                songText0.setText(album.getName());
-
-                JTextPane songText1 = (JTextPane) songText.getComponent(1);
-                StringBuilder artists = new StringBuilder();
-                for (SpotifyArtist artist : album.getArtists()) {
-                    artists.append(artist.getName()).append(", ");
-                }
-                songText1.setText("Artists: " + artists);
-
-                JTextPane songText2 = (JTextPane) songText.getComponent(2);
-                StringBuilder genres = new StringBuilder();
-                for (String genre : album.getGenres()) {
-                    genres.append(genre).append(", ");
-                }
-                songText2.setText("Genres: " + genres);
-
-                // Set Add Seed button to visible
-                JPanel songButtonPanel = (JPanel) song.getComponent(2);
-                JButton addSeedButton = (JButton) songButtonPanel.getComponent(0);
-
-                addSeedButton.setVisible(true);
-
-                // Remove previous action listeners
-                for (ActionListener listener : addSeedButton.getListeners(ActionListener.class)) {
-                    addSeedButton.removeActionListener(listener);
-                }
-
-                // Add new listener
-                addSeedButton.addActionListener(e -> addSeed(album));
-            } else {
-                setEmptySection(i);
-            }
-
-            this.statusMessage.setText("Successfully pulled album data.");
-        }
-    }
-
-    private void setTracksOnView(List<SpotifyTrack> tracks, boolean displayAddSeedButtons) {
-        if (tracks.isEmpty()) {
-            this.statusMessage.setText("No track data found for your query.");
-            return;
-        }
-        // Display up to 3 songs
-        for(int i = 0; i < 3; i++) {
-            if (i < tracks.size()) {
-                SpotifyTrack track = tracks.get(i);
-                JPanel song = (JPanel) this.songDisplay.getComponent(i);
-                // Set image
-                try {
-                    JLabel songImage = (JLabel) song.getComponent(0);
-
-                    URL url = URI.create(track.getAlbum().getImage()).toURL();
-                    BufferedImage image = ImageIO.read(url);
-                    Image resized = image.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
-
-                    songImage.setIcon(new ImageIcon(resized));
-                } catch (Exception e) {
-
-                }
-
-                JPanel songText = (JPanel) song.getComponent(1);
-                JTextPane songText0 = (JTextPane) songText.getComponent(0);
-                songText0.setText(track.getName());
-
-                JTextPane songText1 = (JTextPane) songText.getComponent(1);
-                StringBuilder artists = new StringBuilder();
-                for (SpotifyArtist artist : track.getArtists()) {
-                    artists.append(artist.getName()).append(", ");
-                }
-                songText1.setText("Artists: " + artists);
-
-                JTextPane songText2 = (JTextPane) songText.getComponent(2);
-                songText2.setText("Album: " + track.getAlbum().getName());
-
-                // Set Add Seed button to visible
-                JPanel songButtonPanel = (JPanel) song.getComponent(2);
-                JButton addSeedButton = (JButton) songButtonPanel.getComponent(0);
-
-                addSeedButton.setVisible(displayAddSeedButtons);
-
-                // Remove previous action listeners
-                for (ActionListener listener : addSeedButton.getListeners(ActionListener.class)) {
-                    addSeedButton.removeActionListener(listener);
-                }
-
-                // Add new listener
-                addSeedButton.addActionListener(e -> addSeed(track));
-            } else {
-                setEmptySection(i);
-            }
-
-            this.statusMessage.setText("Successfully pulled track data.");
-        }
+        this.sectionManager.notify(objects, displayAddSeedButtons);
     }
 
     private void getArtists() {
         if (!swingWorkerHelper) {
             String searchQuery = this.searchField.getText();
 
-            artistWorker = new SwingWorker<>() {
+            swingWorker = new SwingWorker<>() {
                 @Override
-                protected List<SpotifyArtist> doInBackground() throws Exception {
+                protected List<SpotifyObject> doInBackground() throws Exception {
                     if (!swingWorkerHelper) {
                         swingWorkerHelper = true;
                     }
@@ -280,17 +105,18 @@ public class MusicRecommenderController {
                 @Override
                 public void done() {
                     try {
-                        setArtistOnView(this.get());
+                        notifyListeners(this.get(), "artists", true);
                         swingWorkerHelper = false;
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    } catch (ExecutionException e) {
-                        throw new RuntimeException(e);
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace(System.out);
                     }
                 }
             };
-            artistWorker.execute();
+            swingWorker.execute();
             this.statusMessage.setText("Getting artist data from Spotify...");
+
+            // Display loading spinner
+            this.loading.setVisible(true);
         } else {
             this.statusMessage.setText("Cannot execute task, task already in progress.");
         }
@@ -300,9 +126,9 @@ public class MusicRecommenderController {
         if (!swingWorkerHelper) {
             String searchQuery = this.searchField.getText();
 
-            albumWorker = new SwingWorker<>() {
+            swingWorker = new SwingWorker<>() {
                 @Override
-                protected List<SpotifyAlbum> doInBackground() throws Exception {
+                protected List<SpotifyObject> doInBackground() throws Exception {
                     if (!swingWorkerHelper) {
                         swingWorkerHelper = true;
                     }
@@ -312,17 +138,18 @@ public class MusicRecommenderController {
                 @Override
                 public void done() {
                     try {
-                        setAlbumsOnView(this.get());
+                        notifyListeners(this.get(), "albums", true);
                         swingWorkerHelper = false;
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    } catch (ExecutionException e) {
-                        throw new RuntimeException(e);
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace(System.out);
                     }
                 }
             };
-            albumWorker.execute();
+            swingWorker.execute();
             this.statusMessage.setText("Getting album data from Spotify...");
+
+            // Display loading spinner
+            this.loading.setVisible(true);
         } else {
             this.statusMessage.setText("Cannot execute task, task already in progress.");
         }
@@ -332,9 +159,9 @@ public class MusicRecommenderController {
         if (!swingWorkerHelper) {
             String searchQuery = this.searchField.getText();
 
-            trackWorker = new SwingWorker<>() {
+            swingWorker = new SwingWorker<>() {
                 @Override
-                protected List<SpotifyTrack> doInBackground() throws Exception {
+                protected List<SpotifyObject> doInBackground() throws Exception {
                     if (!swingWorkerHelper) {
                         swingWorkerHelper = true;
                     }
@@ -344,17 +171,18 @@ public class MusicRecommenderController {
                 @Override
                 public void done() {
                     try {
-                        setTracksOnView(this.get(), true);
+                        notifyListeners(this.get(), "tracks", true);
                         swingWorkerHelper = false;
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    } catch (ExecutionException e) {
-                        throw new RuntimeException(e);
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace(System.out);
                     }
                 }
             };
-            trackWorker.execute();
+            swingWorker.execute();
             this.statusMessage.setText("Getting track data from Spotify...");
+
+            // Display loading spinner
+            this.loading.setVisible(true);
         } else {
             this.statusMessage.setText("Cannot execute task, task already in progress.");
         }
@@ -362,11 +190,9 @@ public class MusicRecommenderController {
 
     private void getRecommendations() {
         if (!swingWorkerHelper) {
-            String searchQuery = this.searchField.getText();
-
-            trackWorker = new SwingWorker<>() {
+            swingWorker = new SwingWorker<>() {
                 @Override
-                protected List<SpotifyTrack> doInBackground() throws Exception {
+                protected List<SpotifyObject> doInBackground() {
                     if (!swingWorkerHelper) {
                         swingWorkerHelper = true;
                     }
@@ -376,23 +202,24 @@ public class MusicRecommenderController {
                 @Override
                 public void done() {
                     try {
-                        setTracksOnView(this.get(), false);
+                        notifyListeners(this.get(), "recs", false);
                         swingWorkerHelper = false;
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    } catch (ExecutionException e) {
-                        throw new RuntimeException(e);
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace(System.out);
                     }
                 }
             };
-            trackWorker.execute();
+            swingWorker.execute();
             this.statusMessage.setText("Getting recommendations from Spotify...");
+
+            // Display loading spinner
+            this.loading.setVisible(true);
         } else {
             this.statusMessage.setText("Cannot execute task, task already in progress.");
         }
     }
 
-    private void addSeed(SpotifyObject obj) {
+    public void addSeed(SpotifyObject obj) {
         this.model.addSeed(obj);
         this.statusMessage.setText("Added " + obj.getName() + " to seed list.");
     }
@@ -400,5 +227,17 @@ public class MusicRecommenderController {
     private void clearSeeds() {
         this.model.clearSeeds();
         this.statusMessage.setText("Cleared seed list.");
+    }
+
+    private void cancelRequest() {
+        // Check value of swingWorkerHelper to determine which SwingWorker to cancel.
+        if (swingWorkerHelper) {
+            this.swingWorker.cancel(true);
+        }
+
+        // Reset swingWorkerHelper
+        this.swingWorkerHelper = false;
+        this.loading.setVisible(false);
+        this.statusMessage.setText("Cancelled API request.");
     }
 }

@@ -3,6 +3,7 @@ package model;
 import model.RecommendationStrategy.ArtistRecommendationStrategy;
 import model.Spotify.SpotifyAlbum;
 import model.Spotify.SpotifyArtist;
+import model.Spotify.SpotifyObject;
 import model.Spotify.SpotifyTrack;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -160,9 +161,9 @@ class MusicRecommenderModelTest {
 
             MusicRecommenderModel model = new MusicRecommenderModel();
 
-            List<SpotifyTrack> recs = model.getRecommendations();
+            List<SpotifyObject> recs = model.getRecommendations();
 
-            assertNull(recs);
+            assert(recs.isEmpty());
         }
     }
 

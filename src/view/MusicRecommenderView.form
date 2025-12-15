@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="view.MusicRecommenderView">
-  <grid id="27dc6" binding="panelMain" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+  <grid id="27dc6" binding="panelMain" layout-manager="FlowLayout" hgap="5" vgap="0" flow-align="1">
     <constraints>
       <xy x="20" y="20" width="1280" height="1720"/>
     </constraints>
@@ -12,112 +12,156 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="7dc0a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+      <grid id="5512c" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints/>
         <properties>
-          <preferredSize width="275" height="720"/>
+          <maximumSize width="275" height="680"/>
+          <minimumSize width="275" height="680"/>
+          <opaque value="false"/>
+          <preferredSize width="275" height="680"/>
         </properties>
         <border type="none"/>
         <children>
-          <component id="81a08" class="javax.swing.JLabel">
+          <grid id="84378" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
             <constraints/>
             <properties>
-              <font name="Arial" size="24" style="1"/>
-              <text value="Music Recommender"/>
+              <background color="-1"/>
+              <maximumSize width="275" height="670"/>
+              <minimumSize width="275" height="670"/>
+              <opaque value="true"/>
+              <preferredSize width="275" height="670"/>
             </properties>
-          </component>
-          <component id="94ac0" class="javax.swing.JLabel">
-            <constraints/>
-            <properties>
-              <font name="Arial" size="16" style="0"/>
-              <preferredSize width="270" height="100"/>
-              <text value="&lt;html&gt;&#10;Search for Songs, Artists, and Albums to get song recommendations. You can select up to 5 songs, artists, or albums to seed your recommendations.&#10;&lt;/html&gt;"/>
-              <verifyInputWhenFocusTarget value="true"/>
-            </properties>
-          </component>
-          <component id="8488e" class="javax.swing.JTextField" binding="testTextField" default-binding="true">
-            <constraints/>
-            <properties>
-              <preferredSize width="270" height="34"/>
-              <text value=""/>
-              <toolTipText value=""/>
-              <visible value="true"/>
-            </properties>
-          </component>
-          <grid id="9799c" layout-manager="FlowLayout" hgap="0" vgap="0" flow-align="1">
-            <constraints/>
-            <properties>
-              <maximumSize width="275" height="75"/>
-              <minimumSize width="275" height="44"/>
-              <preferredSize width="275" height="75"/>
-            </properties>
-            <border type="none"/>
+            <border type="line">
+              <color color="-16777216"/>
+            </border>
             <children>
-              <component id="2ebf" class="javax.swing.JButton" default-binding="true">
+              <component id="d87c9" class="javax.swing.JLabel">
                 <constraints/>
                 <properties>
+                  <font name="Arial" size="24" style="1"/>
+                  <text value="Music Recommender"/>
+                </properties>
+              </component>
+              <component id="316fe" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <font name="Arial" size="16" style="0"/>
+                  <preferredSize width="265" height="100"/>
+                  <text value="&lt;html&gt;&#10;Search for Songs, Artists, and Albums to get song recommendations. You can select up to 5 songs, artists, or albums to seed your recommendations.&#10;&lt;/html&gt;"/>
+                  <verifyInputWhenFocusTarget value="true"/>
+                </properties>
+              </component>
+              <component id="2a550" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+                <constraints/>
+                <properties>
+                  <focusCycleRoot value="true"/>
+                  <preferredSize width="265" height="34"/>
+                </properties>
+              </component>
+              <component id="bc484" class="javax.swing.JButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <label value="Search Artists"/>
                   <text value="Search Artists"/>
                 </properties>
               </component>
-              <component id="1b77f" class="javax.swing.JButton" default-binding="true">
+              <component id="40304" class="javax.swing.JButton" default-binding="true">
                 <constraints/>
                 <properties>
                   <text value="Search Albums"/>
                 </properties>
               </component>
-              <component id="dc2b3" class="javax.swing.JButton" binding="searchSongsButton" default-binding="true">
+              <component id="df02" class="javax.swing.JButton" default-binding="true">
                 <constraints/>
                 <properties>
                   <text value="Search Songs"/>
                 </properties>
               </component>
-            </children>
-          </grid>
-          <grid id="526ca" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
-            <constraints/>
-            <properties>
-              <preferredSize width="275" height="85"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <component id="7b507" class="javax.swing.JButton" binding="getRecommendationsButton" default-binding="true">
-                <constraints/>
-                <properties>
-                  <text value="Get Recommendations"/>
-                </properties>
-              </component>
-              <component id="1856" class="javax.swing.JButton" binding="clearSeedsButton" default-binding="true">
+              <component id="5661e" class="javax.swing.JButton" default-binding="true">
                 <constraints/>
                 <properties>
                   <text value="Clear Seeds"/>
                 </properties>
               </component>
+              <component id="39890" class="javax.swing.JButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Get Recommendations"/>
+                </properties>
+              </component>
+              <grid id="da2f0" layout-manager="FlowLayout" hgap="0" vgap="0" flow-align="1">
+                <constraints/>
+                <properties>
+                  <maximumSize width="265" height="23"/>
+                  <minimumSize width="265" height="33"/>
+                  <opaque value="false"/>
+                  <preferredSize width="265" height="23"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="352cf" class="javax.swing.JTextPane" binding="statusMessage">
+                    <constraints/>
+                    <properties>
+                      <editable value="false"/>
+                      <maximumSize width="265" height="2147483647"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="8c2c7" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints/>
+                <properties>
+                  <opaque value="false"/>
+                  <visible value="false"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="ba3bd" class="javax.swing.JLabel" binding="loadingIcon">
+                    <constraints/>
+                    <properties>
+                      <text value=""/>
+                      <visible value="true"/>
+                    </properties>
+                  </component>
+                  <component id="f887e" class="javax.swing.JButton" binding="cancelRequestButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Cancel Request"/>
+                      <visible value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
-          <component id="8a361" class="javax.swing.JTextPane" binding="statusMessage">
-            <constraints/>
-            <properties/>
-          </component>
         </children>
       </grid>
-      <hspacer id="24756">
+      <hspacer id="b2aa7">
         <constraints/>
       </hspacer>
-      <grid id="a1637" layout-manager="FlowLayout" hgap="0" vgap="0" flow-align="1">
+      <grid id="74377" layout-manager="FlowLayout" hgap="0" vgap="5" flow-align="1">
         <constraints/>
         <properties>
-          <preferredSize width="955" height="720"/>
+          <maximumSize width="955" height="680"/>
+          <minimumSize width="955" height="680"/>
+          <preferredSize width="955" height="680"/>
         </properties>
         <border type="none"/>
         <children>
-          <grid id="24046" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+          <grid id="8703a" layout-manager="FlowLayout" hgap="10" vgap="10" flow-align="0">
             <constraints/>
             <properties>
-              <preferredSize width="955" height="240"/>
+              <background color="-1"/>
+              <maximumSize width="955" height="220"/>
+              <minimumSize width="955" height="220"/>
+              <preferredSize width="955" height="220"/>
+              <visible value="true"/>
             </properties>
-            <border type="none"/>
+            <border type="line">
+              <color color="-16777216"/>
+            </border>
             <children>
-              <component id="75a66" class="javax.swing.JLabel" binding="song0Image">
+              <component id="339f1" class="javax.swing.JLabel" binding="song0Image">
                 <constraints/>
                 <properties>
                   <horizontalAlignment value="2"/>
@@ -126,62 +170,68 @@
                   <verticalAlignment value="0"/>
                 </properties>
               </component>
-              <grid id="6a7d1" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+              <grid id="6a69d" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
                 <constraints/>
                 <properties>
+                  <opaque value="false"/>
                   <preferredSize width="600" height="200"/>
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="dea4f" class="javax.swing.JTextPane" binding="song0Text0">
+                  <component id="2f5e0" class="javax.swing.JTextPane" binding="song0Text0">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <font name="Arial" size="16" style="1"/>
                       <minimumSize width="700" height="25"/>
                       <preferredSize width="700" height="25"/>
                     </properties>
                   </component>
-                  <component id="e7a87" class="javax.swing.JTextPane" binding="song0Text1">
+                  <component id="b130b" class="javax.swing.JTextPane" binding="song0Text1">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <preferredSize width="700" height="23"/>
                     </properties>
                   </component>
-                  <component id="6ed37" class="javax.swing.JTextPane" binding="song0Text2">
+                  <component id="c9e81" class="javax.swing.JTextPane" binding="song0Text2">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <preferredSize width="700" height="23"/>
                     </properties>
                   </component>
                 </children>
               </grid>
-              <grid id="75c63" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
+              <component id="ef0bd" class="javax.swing.JButton" binding="addSeedButton" default-binding="true">
                 <constraints/>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="39bc1" class="javax.swing.JButton" binding="addSeedButton" default-binding="true">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Add Seed"/>
-                      <visible value="false"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
+                <properties>
+                  <text value="Add Seed"/>
+                  <visible value="false"/>
+                </properties>
+              </component>
             </children>
           </grid>
-          <grid id="928a0" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+          <grid id="fff98" layout-manager="FlowLayout" hgap="10" vgap="10" flow-align="0">
             <constraints/>
             <properties>
-              <preferredSize width="955" height="240"/>
+              <background color="-1"/>
+              <maximumSize width="955" height="220"/>
+              <minimumSize width="955" height="220"/>
+              <preferredSize width="955" height="220"/>
+              <visible value="true"/>
             </properties>
-            <border type="none"/>
+            <border type="line">
+              <color color="-16777216"/>
+            </border>
             <children>
-              <component id="77f22" class="javax.swing.JLabel">
+              <component id="7900c" class="javax.swing.JLabel">
                 <constraints/>
                 <properties>
                   <horizontalAlignment value="2"/>
@@ -190,62 +240,68 @@
                   <verticalAlignment value="0"/>
                 </properties>
               </component>
-              <grid id="3713e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+              <grid id="9043d" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
                 <constraints/>
                 <properties>
+                  <opaque value="false"/>
                   <preferredSize width="600" height="200"/>
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="82698" class="javax.swing.JTextPane">
+                  <component id="69332" class="javax.swing.JTextPane">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <font name="Arial" size="16" style="1"/>
                       <minimumSize width="700" height="25"/>
                       <preferredSize width="700" height="25"/>
                     </properties>
                   </component>
-                  <component id="8fcd5" class="javax.swing.JTextPane">
+                  <component id="77ee6" class="javax.swing.JTextPane">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <preferredSize width="700" height="23"/>
                     </properties>
                   </component>
-                  <component id="9e8f0" class="javax.swing.JTextPane">
+                  <component id="b9e0" class="javax.swing.JTextPane">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <preferredSize width="700" height="23"/>
                     </properties>
                   </component>
                 </children>
               </grid>
-              <grid id="ee5ab" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
+              <component id="ddb1b" class="javax.swing.JButton" default-binding="true">
                 <constraints/>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="3388e" class="javax.swing.JButton" default-binding="true">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Add Seed"/>
-                      <visible value="false"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
+                <properties>
+                  <text value="Add Seed"/>
+                  <visible value="false"/>
+                </properties>
+              </component>
             </children>
           </grid>
-          <grid id="3c8e3" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+          <grid id="889d4" layout-manager="FlowLayout" hgap="10" vgap="10" flow-align="0">
             <constraints/>
             <properties>
-              <preferredSize width="955" height="240"/>
+              <background color="-1"/>
+              <maximumSize width="955" height="220"/>
+              <minimumSize width="955" height="220"/>
+              <preferredSize width="955" height="220"/>
+              <visible value="true"/>
             </properties>
-            <border type="none"/>
+            <border type="line">
+              <color color="-16777216"/>
+            </border>
             <children>
-              <component id="7002b" class="javax.swing.JLabel">
+              <component id="8998" class="javax.swing.JLabel">
                 <constraints/>
                 <properties>
                   <horizontalAlignment value="2"/>
@@ -254,52 +310,52 @@
                   <verticalAlignment value="0"/>
                 </properties>
               </component>
-              <grid id="1d891" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+              <grid id="38775" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
                 <constraints/>
                 <properties>
+                  <opaque value="false"/>
                   <preferredSize width="600" height="200"/>
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="585ef" class="javax.swing.JTextPane">
+                  <component id="c8e60" class="javax.swing.JTextPane">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <font name="Arial" size="16" style="1"/>
                       <minimumSize width="700" height="25"/>
                       <preferredSize width="700" height="25"/>
                     </properties>
                   </component>
-                  <component id="b596a" class="javax.swing.JTextPane">
+                  <component id="ce2e2" class="javax.swing.JTextPane">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <preferredSize width="700" height="23"/>
                     </properties>
                   </component>
-                  <component id="8f4e1" class="javax.swing.JTextPane">
+                  <component id="8750a" class="javax.swing.JTextPane">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <preferredSize width="700" height="23"/>
                     </properties>
                   </component>
                 </children>
               </grid>
-              <grid id="b1d2a" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
+              <component id="fff40" class="javax.swing.JButton" default-binding="true">
                 <constraints/>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="d2bb9" class="javax.swing.JButton" default-binding="true">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Add Seed"/>
-                      <visible value="false"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
+                <properties>
+                  <text value="Add Seed"/>
+                  <visible value="false"/>
+                </properties>
+              </component>
             </children>
           </grid>
         </children>

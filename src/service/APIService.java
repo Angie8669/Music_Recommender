@@ -1,10 +1,7 @@
 package service;
 
 import Utils.APIUtils;
-import model.Spotify.SpotifyAlbum;
-import model.Spotify.SpotifyArtist;
-import model.Spotify.SpotifyData;
-import model.Spotify.SpotifyTrack;
+import model.Spotify.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,8 +15,8 @@ import java.util.Properties;
 
 public class APIService {
     private static APIService api;
-    private final String authUrl = "https://accounts.spotify.com/api/token";
-    private final String baseUrl = "https://api.spotify.com/v1/";
+    private final String authUrl = "https://accounts.spotify.com/";
+    private final String webUrl = "https://api.spotify.com/";
     private String accessToken = "";
 
     // Implement Singleton pattern to ensure only one instance of the APIService is created.
@@ -39,65 +36,21 @@ public class APIService {
         return api;
     }
 
-    private JSONObject callPostAPI(String urlString, String urlParameters) {
+    private JSONObject callAPI(String method, String baseUrl, String path, String params) {
         // Inspired by https://stackoverflow.com/questions/1359689/how-to-send-http-request-in-java
         HttpURLConnection connection = null;
 
         try {
             //Create connection
-            URL url = URI.create(urlString).toURL();
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type",
-                    "application/x-www-form-urlencoded");
+            connection = RequestFactory.createConnection(method, baseUrl, path, params, this.accessToken);
 
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
-
-            //Send request
-            DataOutputStream wr = new DataOutputStream (
-                    connection.getOutputStream());
-            wr.writeBytes(urlParameters);
-            wr.close();
-
-            //Get Response
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuilder response = new StringBuilder();
-
-            String line;
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
+            if (method.equals("POST")) {
+                //Add params to request body and send request
+                DataOutputStream wr = new DataOutputStream(
+                        connection.getOutputStream());
+                wr.writeBytes(params);
+                wr.close();
             }
-            rd.close();
-
-            return new JSONObject(response.toString());
-        } catch (Exception e) {
-            // Return false to indicate authentication failed
-            e.printStackTrace(System.out);
-            return null;
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-    }
-
-    private JSONObject callGetAPI(String urlString) {
-        // Inspired by https://stackoverflow.com/questions/1359689/how-to-send-http-request-in-java
-        HttpURLConnection connection = null;
-
-        try {
-            //Create connection
-            URL url = URI.create(urlString).toURL();
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Authorization",
-                    "Bearer " + this.accessToken);
-
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
 
             //Get Response
             InputStream is = connection.getInputStream();
@@ -137,22 +90,22 @@ public class APIService {
             return false;
         }
 
-        String urlParameters = "grant_type=client_credentials&client_id=" + prop.getProperty("client_id") + "&client_secret=" + prop.getProperty("client_secret");
-        JSONObject response = callPostAPI(authUrl, urlParameters);
+        String params = "grant_type=client_credentials&client_id=" + prop.getProperty("client_id") + "&client_secret=" + prop.getProperty("client_secret");
+        JSONObject response = callAPI("POST", this.authUrl, "api/token/", params);
 
         this.accessToken = response.getString("access_token");
 
         return true;
     }
 
-    public List<SpotifyArtist> searchForArtists(String searchString, int limit) {
-        String urlParameters = APIUtils.encodeParams("q=" + searchString + "&type=artist&limit=" + limit);
+    public List<SpotifyObject> searchForArtists(String searchString, int limit) {
+        String urlParameters = APIUtils.encodeParams("?q=" + searchString + "&type=artist&limit=" + limit);
 
-        JSONObject response = callGetAPI(this.baseUrl + "search?" + urlParameters);
+        JSONObject response = callAPI("GET", this.webUrl, "v1/search", urlParameters);
 
         if (response != null) {
             JSONArray items = response.getJSONObject("artists").getJSONArray("items");
-            List<SpotifyArtist> artists = new ArrayList<>();
+            List<SpotifyObject> artists = new ArrayList<>();
             for (int i = 0; i < items.length(); i++) {
                 JSONObject item = items.getJSONObject(i);
 
@@ -169,14 +122,14 @@ public class APIService {
         return new ArrayList<>();
     }
 
-    public List<SpotifyAlbum> searchForAlbums(String searchString, int limit) {
-        String urlParameters = APIUtils.encodeParams("q=" + searchString + "&type=album&limit=" + limit);
+    public List<SpotifyObject> searchForAlbums(String searchString, int limit) {
+        String urlParameters = APIUtils.encodeParams("?q=" + searchString + "&type=album&limit=" + limit);
 
-        JSONObject response = callGetAPI(this.baseUrl + "search?" + urlParameters);
+        JSONObject response = callAPI("GET", this.webUrl, "v1/search", urlParameters);
 
         if (response != null) {
             JSONArray items = response.getJSONObject("albums").getJSONArray("items");
-            List<SpotifyAlbum> albums = new ArrayList<>();
+            List<SpotifyObject> albums = new ArrayList<>();
             for (int i = 0; i < items.length(); i++) {
                 JSONObject item = items.getJSONObject(i);
 
@@ -200,14 +153,14 @@ public class APIService {
         return new ArrayList<>();
     }
 
-    public List<SpotifyTrack> searchForSongs(String searchString, int limit) {
-        String urlParameters = APIUtils.encodeParams("q=" + searchString + "&type=track&limit=" + limit);
+    public List<SpotifyObject> searchForSongs(String searchString, int limit) {
+        String urlParameters = APIUtils.encodeParams("?q=" + searchString + "&type=track&limit=" + limit);
 
-        JSONObject response = callGetAPI(this.baseUrl + "search?" + urlParameters);
+        JSONObject response = callAPI("GET", this.webUrl, "v1/search", urlParameters);
 
         if (response != null) {
             JSONArray items = response.getJSONObject("tracks").getJSONArray("items");
-            List<SpotifyTrack> tracks = new ArrayList<>();
+            List<SpotifyObject> tracks = new ArrayList<>();
             for (int i = 0; i < items.length(); i++) {
                 JSONObject item = items.getJSONObject(i);
 
@@ -234,14 +187,14 @@ public class APIService {
     }
 
     public JSONObject getArtist(String id) {
-        return callGetAPI(this.baseUrl + "artists/" + id);
+        return callAPI("GET", this.webUrl, "v1/artists/" + id, "");
     }
 
     public JSONObject getAlbum(String id) {
-        return callGetAPI(this.baseUrl + "albums/" + id);
+        return callAPI("GET", this.webUrl, "v1/albums/" + id, "");
     }
 
     public JSONObject getTrack(String id) {
-        return callGetAPI(this.baseUrl + "tracks/" + id);
+        return callAPI("GET", this.webUrl, "v1/tracks/" + id, "");
     }
 }

@@ -1,6 +1,6 @@
 package model.Spotify;
 
-public class SpotifyObject {
+public abstract class SpotifyObject {
     protected String id;
     protected String name;
 
@@ -19,14 +19,9 @@ public class SpotifyObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof SpotifyObject) {
-            SpotifyObject spotifyObject = (SpotifyObject) obj;
+        if (obj instanceof SpotifyObject spotifyObject) {
             return spotifyObject.getId().equals(this.getId());
         }
         return false;
-    }
-
-    public String toString() {
-        return "SpotifyObject: id: " + this.id + ", name: " + this.name;
     }
 }

@@ -1,5 +1,6 @@
 package model.RecommendationStrategy;
 
+import model.Spotify.SpotifyObject;
 import model.Spotify.SpotifyTrack;
 import service.APIService;
 
@@ -7,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ArtistRecommendationStrategy extends RecommendationStrategy {
-    public List<SpotifyTrack> getRecommendations(List<String> seeds) {
+    public List<SpotifyObject> getRecommendations(List<String> seeds) {
         APIService api = APIService.getInstance();
 
         // Pick a random artist to search for recommendations

@@ -15,8 +15,14 @@
 - Handles exceptions from Spotify API due to bad queries, as well as handling empty results.
 
 ## Design Patterns
-- Strategy - Implements multiple strategies for getting recommendations, based on if genre data is available for specified seeds.
-- Singleton - Ensures only one instance of APIService exists. Ensures that only one instance of any SpotifyObject (artist, album, or track) at any time.
+- Factory - Uses a factory to build an HttpUrlConnection object based on request method and URL parts.
+- Observer - Creates SectionListener objects for each section of the UI that represents songs, artists, or albums. All
+SectionListeners are managed by the SectionManager. The Controller retrieves data from the Model, which is passed to the
+SectionManager to ask each SectionListener to update the proper parts of the UI.
+- Strategy - Implements multiple strategies for getting recommendations, based on if genre data is available for 
+specified seeds.
+- Singleton - Ensures only one instance of APIService exists. Ensures that only one instance of any SpotifyObject 
+(artist, album, or track) at any time.
 
 ## Demo: 
 [Demo Link](https://drive.google.com/file/d/1GFogJ5CsbDhItLwNo-cK5llsE5dRTaJE/view?usp=sharing)

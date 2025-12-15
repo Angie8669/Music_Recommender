@@ -17,22 +17,22 @@ public class MusicRecommenderModel {
         this.seedObjects = new ArrayList<>();
     }
 
-    public List<SpotifyArtist> searchForArtists(String searchQuery) {
+    public List<SpotifyObject> searchForArtists(String searchQuery) {
         return api.searchForArtists(searchQuery, 3);
     }
 
-    public List<SpotifyAlbum> searchForAlbums(String searchQuery) {
+    public List<SpotifyObject> searchForAlbums(String searchQuery) {
         return api.searchForAlbums(searchQuery, 3);
     }
 
-    public List<SpotifyTrack> searchForTracks(String searchQuery) {
+    public List<SpotifyObject> searchForTracks(String searchQuery) {
         return api.searchForSongs(searchQuery, 3);
     }
 
-    public List<SpotifyTrack> getRecommendations() {
+    public List<SpotifyObject> getRecommendations() {
         // Need at least one seed to get recommendations
         if (this.seedObjects.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
 
         // First, get all of the genres from tracks, artists, and albums in seeds
@@ -78,7 +78,7 @@ public class MusicRecommenderModel {
         }
 
         // Make sure recommendations don't contain seeds
-        List<SpotifyTrack> recs = strategy.getRecommendations(seeds);
+        List<SpotifyObject> recs = strategy.getRecommendations(seeds);
 
         for (SpotifyObject obj : this.seedObjects) {
             if (obj instanceof SpotifyTrack track) {
